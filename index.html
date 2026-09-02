@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <title>Sprint OSINT</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#1b1f22;font-family:'Source Sans Pro',sans-serif;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        #wrapper{background:rgba(27,31,34,.92);max-width:900px;width:100%;padding:40px 50px;border-radius:12px;border:1px solid rgba(255,255,255,.05);box-shadow:0 20px 60px rgba(0,0,0,.8);position:relative}
+        h1{font-size:3em;font-weight:300;letter-spacing:4px;border-bottom:2px solid #ffffff20;padding-bottom:10px}
+        h1 strong{font-weight:700;color:#6ec8f0}
+        .subtitle{font-size:.9em;color:#a0a8b0;letter-spacing:2px;margin-bottom:30px}
+        .tabs{display:flex;gap:5px;margin:25px 0;border-bottom:1px solid #ffffff15;flex-wrap:wrap}
+        .tab-btn{background:0 0;border:none;color:#a0a8b0;padding:10px 20px;font-size:1em;cursor:pointer;transition:.3s;font-family:inherit;border-radius:6px 6px 0 0}
+        .tab-btn:hover{color:#fff;background:#ffffff10}
+        .tab-btn.active{color:#6ec8f0;background:#ffffff10;border-bottom:2px solid #6ec8f0}
+        .tab-content{display:none;padding:20px 0;line-height:1.7;color:#d0d8e0}
+        .tab-content.active{display:block}
+        .work-item{background:#ffffff08;padding:15px 20px;margin:15px 0;border-left:3px solid #6ec8f0;border-radius:4px}
+        .work-item h3{color:#fff;margin-bottom:5px}
+        .work-item span{font-size:.8em;color:#6ec8f0;opacity:.8}
+        .tools-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+        .tools-list .tool-tag{background:#6ec8f020;color:#6ec8f0;padding:4px 14px;border-radius:20px;font-size:.85em;border:1px solid #6ec8f040}
+        .contact-links a{display:inline-block;color:#6ec8f0;text-decoration:none;margin-right:20px;border:1px solid #6ec8f050;padding:5px 20px;border-radius:20px;font-size:.9em;transition:.3s}
+        .contact-links a:hover{background:#6ec8f0;color:#1b1f22}
+        .footer{margin-top:30px;font-size:.7em;color:#606870;text-align:center;border-top:1px solid #ffffff10;padding-top:20px}
+        .admin-gear{position:absolute;top:20px;right:25px;color:#3a4a58;font-size:1.2em;cursor:pointer;background:0 0;border:none;transition:.3s}
+        .admin-gear:hover{color:#6ec8f0;transform:rotate(60deg)}
+        .admin-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+        .admin-modal-content{background:#1b1f22;max-width:650px;width:100%;padding:35px 40px;border-radius:16px;border:1px solid #2a3a48;max-height:90vh;overflow-y:auto}
+        .admin-modal-content h2{color:#6ec8f0;margin-bottom:5px}
+        .admin-modal-content .hint{color:#8898a8;font-size:.85em;margin-bottom:20px}
+        .admin-modal-content label{display:block;color:#b0c0ce;margin:12px 0 4px;font-size:.9em}
+        .admin-modal-content input,.admin-modal-content textarea{width:100%;padding:10px 14px;margin-bottom:6px;background:#0a0e12;border:1px solid #2a3a48;border-radius:8px;color:#fff;font-size:.95em;font-family:inherit}
+        .admin-modal-content textarea{resize:vertical;min-height:60px}
+        .admin-modal-content .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+        .admin-modal-content .btn-row button{padding:10px 20px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.95em}
+        .btn-primary{background:#6ec8f0;color:#0a0e12}
+        .btn-secondary{background:#1f2a34;color:#c8d4de;border:1px solid #2a3a48}
+        .btn-close{background:#2a1a1a;color:#d08080;border:1px solid #4a2a2a}
+        .admin-modal-content .item-list{max-height:200px;overflow-y:auto;margin:10px 0}
+        .admin-modal-content .list-item{display:flex;justify-content:space-between;align-items:center;background:#0a0e12;padding:8px 14px;margin:4px 0;border-radius:6px;border-left:3px solid #6ec8f0}
+        .admin-modal-content .list-item .del-btn{background:0 0;border:none;color:#ff6b6b;cursor:pointer;font-size:1.1em}
+        hr{border-color:#1f2a34;margin:20px 0}
+        @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}.admin-modal-content{padding:20px}}
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <button class="admin-gear" id="adminGear">⚙</button>
+    <h1 id="siteTitle">Sprint <strong>OSINT</strong></h1>
+    <div class="subtitle">Разведка по открытым источникам · Анализ сетей</div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="about">Обо мне</button>
+        <button class="tab-btn" data-tab="works">Работы</button>
+        <button class="tab-btn" data-tab="contact">Контакты</button>
+    </div>
+    <div id="about" class="tab-content active">
+        <div id="aboutText"></div>
+        <div style="margin-top:15px;">
+            <strong style="color:#a0b0be;">Инструменты:</strong>
+            <div class="tools-list" id="toolsContainer"></div>
+        </div>
+    </div>
+    <div id="works" class="tab-content"><div id="worksContainer"></div></div>
+    <div id="contact" class="tab-content">
+        <p style="margin-bottom:20px;">Связь:</p>
+        <div class="contact-links"><a href="https://t.me/sprintdrop" target="_blank">Telegram</a></div>
+        <p style="margin-top:25px;font-size:.8em;color:#606870;">⚡ PGP: 1234 ABCD 5678 EF90</p>
+    </div>
+    <div class="footer">Данные из открытых источников · 2026</div>
+</div>
+
+<script>
+const S={NAME:'sprint_name',ABOUT:'sprint_about',TOOLS:'sprint_tools',WORKS:'sprint_works'};
+const D={name:'Sprint OSINT',about:'Специализируюсь на OSINT и анализе сетей. Поиск скрытых данных, связей и уязвимостей.\n\nНавыки: пассивная/активная разведка, DNS-анализ, картирование ASN, WAF, антибот-системы, ЕГРЮЛ.',tools:['Nmap','Dig','WhoIs','RIPE','Curl','Shodan','Google Dorks','Maltego'],works:[{title:'Исследование e-commerce',desc:'Картирование подсетей, DNS, открытые порты.',year:'2025'},{title:'Анализ утечек',desc:'Обработка 10M+ записей, поиск связей.',year:'2024'},{title:'Юридический OSINT',desc:'Поиск аффилированных лиц через ЕГРЮЛ.',year:'2024'}]};
+
+function init(){
+    if(!localStorage.getItem(S.NAME)) localStorage.setItem(S.NAME,D.name);
+    if(!localStorage.getItem(S.ABOUT)) localStorage.setItem(S.ABOUT,D.about);
+    if(!localStorage.getItem(S.TOOLS)) localStorage.setItem(S.TOOLS,JSON.stringify(D.tools));
+    if(!localStorage.getItem(S.WORKS)) localStorage.setItem(S.WORKS,JSON.stringify(D.works));
+}
+
+function load(){
+    let n=localStorage.getItem(S.NAME)||'Sprint OSINT';
+    document.getElementById('siteTitle').innerHTML=n.replace(/OSINT/i,'<strong>OSINT</strong>');
+    let a=localStorage.getItem(S.ABOUT)||D.about;
+    document.getElementById('aboutText').innerHTML=a.replace(/\n/g,'<br>');
+    let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
+    document.getElementById('toolsContainer').innerHTML=t.length?t.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'<span style="color:#606870;">Нет инструментов</span>';
+    let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
+    document.getElementById('worksContainer').innerHTML=w.length?w.map(x=>`<div class="work-item"><h3>${x.title}</h3><span>${x.year||'2025'}</span><p>${x.desc}</p></div>`).join(''):'<p style="color:#606870;">Нет проектов</p>';
+}
+
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById(this.dataset.tab).classList.add('active');
+});
+
+function openAdmin(){
+    let n=localStorage.getItem(S.NAME)||'',a=localStorage.getItem(S.ABOUT)||'',t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
+    let m=document.createElement('div');
+    m.className='admin-modal';m.id='adminModal';
+    m.innerHTML=`<div class="admin-modal-content"><h2>⚙️ Админка</h2><p class="hint">Данные в LocalStorage. Экспортируй для бэкапа.</p>
+        <label>Имя</label><input type="text" id="editName" value="${n}">
+        <label>О себе</label><textarea id="editAbout" rows="4">${a}</textarea>
+        <label>Инструменты (через запятую)</label><div style="display:flex;gap:8px;flex-wrap:wrap;"><input type="text" id="editToolsInput" placeholder="Nmap, Shodan" style="flex:1;min-width:150px;"><button class="btn-primary" onclick="addTool()">➕</button></div>
+        <div id="toolsAdminList" class="item-list">${t.map((x,i)=>`<div class="list-item"><span>${x}</span><button class="del-btn" onclick="removeTool(${i})">✕</button></div>`).join('')}</div>
+        <hr>
+        <label>Новая работа</label><input type="text" id="editWorkTitle" placeholder="Название"><textarea id="editWorkDesc" placeholder="Описание" rows="2"></textarea><input type="text" id="editWorkYear" placeholder="Год"><button class="btn-primary" onclick="addWork()" style="margin-top:6px;">➕ Добавить</button>
+        <div id="worksAdminList" class="item-list">${w.map((x,i)=>`<div class="list-item"><span><strong>${x.title}</strong> (${x.year||'2025'}) — ${x.desc.substring(0,40)}${x.desc.length>40?'...':''}</span><button class="del-btn" onclick="removeWork(${i})">✕</button></div>`).join('')}</div>
+        <hr>
+        <div class="btn-row"><button class="btn-primary" onclick="saveAll()">💾 Сохранить</button><button class="btn-secondary" onclick="exportData()">📤 Экспорт</button><button class="btn-secondary" onclick="importData()">📥 Импорт</button><button class="btn-close" onclick="closeAdmin()">✕</button></div>
+        <p style="color:#5a6a78;font-size:.8em;margin-top:8px;">⚠️ После сохранения обнови страницу (F5).</p></div>`;
+    document.body.appendChild(m);
+}
+
+window.addTool=function(){
+    let inp=document.getElementById('editToolsInput'),v=inp.value.trim();
+    if(!v)return;
+    let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
+    v.split(',').forEach(x=>{let c=x.trim();if(c&&!t.includes(c))t.push(c);});
+    localStorage.setItem(S.TOOLS,JSON.stringify(t));
+    inp.value='';
+    refreshTools();load();
+};
+
+window.removeTool=function(i){
+    let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
+    t.splice(i,1);
+    localStorage.setItem(S.TOOLS,JSON.stringify(t));
+    refreshTools();load();
+};
+
+window.addWork=function(){
+    let t=document.getElementById('editWorkTitle').value.trim(),d=document.getElementById('editWorkDesc').value.trim(),y=document.getElementById('editWorkYear').value.trim()||'2025';
+    if(!t||!d){alert('Заполни всё!');return;}
+    let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
+    w.push({title:t,desc:d,year:y});
+    localStorage.setItem(S.WORKS,JSON.stringify(w));
+    document.getElementById('editWorkTitle').value='';document.getElementById('editWorkDesc').value='';document.getElementById('editWorkYear').value='';
+    refreshWorks();load();
+};
+
+window.removeWork=function(i){
+    let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
+    w.splice(i,1);
+    localStorage.setItem(S.WORKS,JSON.stringify(w));
+    refreshWorks();load();
+};
+
+window.saveAll=function(){
+    let n=document.getElementById('editName').value.trim()||'Sprint OSINT',a=document.getElementById('editAbout').value.trim()||'Описание';
+    localStorage.setItem(S.NAME,n);localStorage.setItem(S.ABOUT,a);
+    alert('✅ Сохранено! Обнови F5.');load();
+};
+
+window.exportData=function(){
+    let data={name:localStorage.getItem(S.NAME),about:localStorage.getItem(S.ABOUT),tools:JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),works:JSON.parse(localStorage.getItem(S.WORKS)||'[]')};
+    let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='sprint_backup.json';a.click();URL.revokeObjectURL(url);
+};
+
+window.importData=function(){
+    let inp=document.createElement('input');inp.type='file';inp.accept='.json';
+    inp.onchange=function(e){
+        let file=e.target.files[0];if(!file)return;
+        let r=new FileReader();
+        r.onload=function(ev){
+            try{
+                let d=JSON.parse(ev.target.result);
+                if(d.name)localStorage.setItem(S.NAME,d.name);
+                if(d.about)localStorage.setItem(S.ABOUT,d.about);
+                if(d.tools)localStorage.setItem(S.TOOLS,JSON.stringify(d.tools));
+                if(d.works)localStorage.setItem(S.WORKS,JSON.stringify(d.works));
+                alert('✅ Импорт выполнен! Обнови F5.');load();closeAdmin();setTimeout(openAdmin,300);
+            }catch(err){alert('❌ Ошибка JSON');}
+        };
+        r.readAsText(file);
+    };
+    inp.click();
+};
+
+window.closeAdmin=function(){let m=document.getElementById('adminModal');if(m)m.remove();};
+window.refreshTools=function(){
+    let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),c=document.getElementById('toolsAdminList');
+    if(c)c.innerHTML=t.map((x,i)=>`<div class="list-item"><span>${x}</span><button class="del-btn" onclick="removeTool(${i})">✕</button></div>`).join('');
+};
+window.refreshWorks=function(){
+    let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]'),c=document.getElementById('worksAdminList');
+    if(c)c.innerHTML=w.map((x,i)=>`<div class="list-item"><span><strong>${x.title}</strong> (${x.year||'2025'}) — ${x.desc.substring(0,40)}${x.desc.length>40?'...':''}</span><button class="del-btn" onclick="removeWork(${i})">✕</button></div>`).join('');
+};
+
+document.getElementById('adminGear').onclick=function(){
+    let p=prompt('🔐 Пароль:');
+    if(p===null)return;
+    if(p!=='admin123'){alert('❌ Неверный!');return;}
+    openAdmin();
+};
+
+init();load();
+</script>
+</body>
+</html>
