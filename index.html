@@ -18,9 +18,6 @@
         .tab-btn.active{color:#6ec8f0;background:#ffffff10;border-bottom:2px solid #6ec8f0}
         .tab-content{display:none;padding:20px 0;line-height:1.7;color:#d0d8e0}
         .tab-content.active{display:block}
-        .work-item{background:#ffffff08;padding:15px 20px;margin:15px 0;border-left:3px solid #6ec8f0;border-radius:4px}
-        .work-item h3{color:#fff;margin-bottom:5px}
-        .work-item span{font-size:.8em;color:#6ec8f0;opacity:.8}
         .tools-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
         .tools-list .tool-tag{background:#6ec8f020;color:#6ec8f0;padding:4px 14px;border-radius:20px;font-size:.85em;border:1px solid #6ec8f040}
         .contact-links a{display:inline-block;color:#6ec8f0;text-decoration:none;margin-right:20px;border:1px solid #6ec8f050;padding:5px 20px;border-radius:20px;font-size:.9em;transition:.3s}
@@ -28,23 +25,70 @@
         .footer{margin-top:30px;font-size:.7em;color:#606870;text-align:center;border-top:1px solid #ffffff10;padding-top:20px}
         .admin-gear{position:absolute;top:20px;right:25px;color:#3a4a58;font-size:1.2em;cursor:pointer;background:0 0;border:none;transition:.3s}
         .admin-gear:hover{color:#6ec8f0;transform:rotate(60deg)}
-        .admin-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-        .admin-modal-content{background:#1b1f22;max-width:650px;width:100%;padding:35px 40px;border-radius:16px;border:1px solid #2a3a48;max-height:90vh;overflow-y:auto}
-        .admin-modal-content h2{color:#6ec8f0;margin-bottom:5px}
-        .admin-modal-content .hint{color:#8898a8;font-size:.85em;margin-bottom:20px}
-        .admin-modal-content label{display:block;color:#b0c0ce;margin:12px 0 4px;font-size:.9em}
-        .admin-modal-content input,.admin-modal-content textarea{width:100%;padding:10px 14px;margin-bottom:6px;background:#0a0e12;border:1px solid #2a3a48;border-radius:8px;color:#fff;font-size:.95em;font-family:inherit}
-        .admin-modal-content textarea{resize:vertical;min-height:60px}
-        .admin-modal-content .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
-        .admin-modal-content .btn-row button{padding:10px 20px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.95em}
-        .btn-primary{background:#6ec8f0;color:#0a0e12}
-        .btn-secondary{background:#1f2a34;color:#c8d4de;border:1px solid #2a3a48}
-        .btn-close{background:#2a1a1a;color:#d08080;border:1px solid #4a2a2a}
-        .admin-modal-content .item-list{max-height:200px;overflow-y:auto;margin:10px 0}
-        .admin-modal-content .list-item{display:flex;justify-content:space-between;align-items:center;background:#0a0e12;padding:8px 14px;margin:4px 0;border-radius:6px;border-left:3px solid #6ec8f0}
-        .admin-modal-content .list-item .del-btn{background:0 0;border:none;color:#ff6b6b;cursor:pointer;font-size:1.1em}
-        hr{border-color:#1f2a34;margin:20px 0}
-        @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}.admin-modal-content{padding:20px}}
+        
+        /* ===== АККОРДЕОН ДЛЯ ПРОЕКТОВ ===== */
+        .accordion-item {
+            background: #ffffff08;
+            margin: 12px 0;
+            border-radius: 6px;
+            border-left: 3px solid #6ec8f0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .accordion-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover {
+            background: #ffffff12;
+        }
+        .accordion-header h3 {
+            color: #fff;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin: 0;
+        }
+        .accordion-header .year {
+            color: #6ec8f0;
+            opacity: 0.7;
+            font-size: 0.85em;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+        .accordion-header .arrow {
+            color: #6ec8f0;
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        .accordion-header .arrow.open {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            max-height: 0;
+            padding: 0 20px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            color: #b0c0ce;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .accordion-body.open {
+            max-height: 300px;
+            padding: 0 20px 20px 20px;
+        }
+        .accordion-body p {
+            margin: 0;
+        }
+
+        /* Адаптив */
+        @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}}
     </style>
 </head>
 <body>
@@ -53,11 +97,14 @@
     <button class="admin-gear" id="adminGear">⚙</button>
     <h1 id="siteTitle">Sprint <strong>OSINT</strong></h1>
     <div class="subtitle">Разведка по открытым источникам · Анализ сетей</div>
+    
     <div class="tabs">
         <button class="tab-btn active" data-tab="about">Обо мне</button>
         <button class="tab-btn" data-tab="works">Работы</button>
         <button class="tab-btn" data-tab="contact">Контакты</button>
     </div>
+    
+    <!-- ===== ВКЛАДКА: Обо мне ===== -->
     <div id="about" class="tab-content active">
         <div id="aboutText"></div>
         <div style="margin-top:15px;">
@@ -65,12 +112,21 @@
             <div class="tools-list" id="toolsContainer"></div>
         </div>
     </div>
-    <div id="works" class="tab-content"><div id="worksContainer"></div></div>
+
+    <!-- ===== ВКЛАДКА: Работы (аккордеон) ===== -->
+    <div id="works" class="tab-content">
+        <div id="worksContainer"></div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: Контакты ===== -->
     <div id="contact" class="tab-content">
         <p style="margin-bottom:20px;">Связь:</p>
-        <div class="contact-links"><a href="https://t.me/sprintdrop" target="_blank">Telegram</a></div>
+        <div class="contact-links">
+            <a href="https://t.me/sprintdrop" target="_blank">Telegram</a>
+        </div>
         <p style="margin-top:25px;font-size:.8em;color:#606870;">⚡ PGP: 1234 ABCD 5678 EF90</p>
     </div>
+
     <div class="footer">Данные из открытых источников · 2026</div>
 </div>
 
@@ -92,10 +148,45 @@ function load(){
     document.getElementById('aboutText').innerHTML=a.replace(/\n/g,'<br>');
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
     document.getElementById('toolsContainer').innerHTML=t.length?t.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'<span style="color:#606870;">Нет инструментов</span>';
+    
+    // ===== РАБОТЫ С АККОРДЕОНОМ =====
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
-    document.getElementById('worksContainer').innerHTML=w.length?w.map(x=>`<div class="work-item"><h3>${x.title}</h3><span>${x.year||'2025'}</span><p>${x.desc}</p></div>`).join(''):'<p style="color:#606870;">Нет проектов</p>';
+    let container=document.getElementById('worksContainer');
+    if(!w.length){
+        container.innerHTML='<p style="color:#606870;">Нет проектов</p>';
+        return;
+    }
+    container.innerHTML=w.map((x,i)=>`
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleWork(${i})">
+                <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                    <h3>${x.title}</h3>
+                    <span class="year">${x.year||'2025'}</span>
+                </div>
+                <span class="arrow" id="arrow-${i}">▾</span>
+            </div>
+            <div class="accordion-body" id="body-${i}">
+                <p>${x.desc}</p>
+            </div>
+        </div>
+    `).join('');
 }
 
+// ===== ФУНКЦИЯ РАЗВОРОТА =====
+function toggleWork(index){
+    let body=document.getElementById('body-'+index);
+    let arrow=document.getElementById('arrow-'+index);
+    if(!body) return;
+    if(body.classList.contains('open')){
+        body.classList.remove('open');
+        if(arrow) arrow.classList.remove('open');
+    }else{
+        body.classList.add('open');
+        if(arrow) arrow.classList.add('open');
+    }
+}
+
+// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
 document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
@@ -103,6 +194,7 @@ document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.getElementById(this.dataset.tab).classList.add('active');
 });
 
+// ===== АДМИНКА =====
 function openAdmin(){
     let n=localStorage.getItem(S.NAME)||'',a=localStorage.getItem(S.ABOUT)||'',t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     let m=document.createElement('div');
@@ -119,6 +211,32 @@ function openAdmin(){
         <div class="btn-row"><button class="btn-primary" onclick="saveAll()">💾 Сохранить</button><button class="btn-secondary" onclick="exportData()">📤 Экспорт</button><button class="btn-secondary" onclick="importData()">📥 Импорт</button><button class="btn-close" onclick="closeAdmin()">✕</button></div>
         <p style="color:#5a6a78;font-size:.8em;margin-top:8px;">⚠️ После сохранения обнови страницу (F5).</p></div>`;
     document.body.appendChild(m);
+    
+    // Стили для админки (если их нет)
+    if(!document.getElementById('adminStyles')){
+        let style=document.createElement('style');
+        style.id='adminStyles';
+        style.textContent=`
+            .admin-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+            .admin-modal-content{background:#1b1f22;max-width:650px;width:100%;padding:35px 40px;border-radius:16px;border:1px solid #2a3a48;max-height:90vh;overflow-y:auto}
+            .admin-modal-content h2{color:#6ec8f0;margin-bottom:5px}
+            .admin-modal-content .hint{color:#8898a8;font-size:.85em;margin-bottom:20px}
+            .admin-modal-content label{display:block;color:#b0c0ce;margin:12px 0 4px;font-size:.9em}
+            .admin-modal-content input,.admin-modal-content textarea{width:100%;padding:10px 14px;margin-bottom:6px;background:#0a0e12;border:1px solid #2a3a48;border-radius:8px;color:#fff;font-size:.95em;font-family:inherit}
+            .admin-modal-content textarea{resize:vertical;min-height:60px}
+            .admin-modal-content .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+            .admin-modal-content .btn-row button{padding:10px 20px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.95em}
+            .btn-primary{background:#6ec8f0;color:#0a0e12}
+            .btn-secondary{background:#1f2a34;color:#c8d4de;border:1px solid #2a3a48}
+            .btn-close{background:#2a1a1a;color:#d08080;border:1px solid #4a2a2a}
+            .admin-modal-content .item-list{max-height:200px;overflow-y:auto;margin:10px 0}
+            .admin-modal-content .list-item{display:flex;justify-content:space-between;align-items:center;background:#0a0e12;padding:8px 14px;margin:4px 0;border-radius:6px;border-left:3px solid #6ec8f0}
+            .admin-modal-content .list-item .del-btn{background:0 0;border:none;color:#ff6b6b;cursor:pointer;font-size:1.1em}
+            hr{border-color:#1f2a34;margin:20px 0}
+            @media(max-width:600px){.admin-modal-content{padding:20px}}
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 window.addTool=function(){
@@ -130,14 +248,12 @@ window.addTool=function(){
     inp.value='';
     refreshTools();load();
 };
-
 window.removeTool=function(i){
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
     t.splice(i,1);
     localStorage.setItem(S.TOOLS,JSON.stringify(t));
     refreshTools();load();
 };
-
 window.addWork=function(){
     let t=document.getElementById('editWorkTitle').value.trim(),d=document.getElementById('editWorkDesc').value.trim(),y=document.getElementById('editWorkYear').value.trim()||'2025';
     if(!t||!d){alert('Заполни всё!');return;}
@@ -147,26 +263,22 @@ window.addWork=function(){
     document.getElementById('editWorkTitle').value='';document.getElementById('editWorkDesc').value='';document.getElementById('editWorkYear').value='';
     refreshWorks();load();
 };
-
 window.removeWork=function(i){
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     w.splice(i,1);
     localStorage.setItem(S.WORKS,JSON.stringify(w));
     refreshWorks();load();
 };
-
 window.saveAll=function(){
     let n=document.getElementById('editName').value.trim()||'Sprint OSINT',a=document.getElementById('editAbout').value.trim()||'Описание';
     localStorage.setItem(S.NAME,n);localStorage.setItem(S.ABOUT,a);
     alert('✅ Сохранено! Обнови F5.');load();
 };
-
 window.exportData=function(){
     let data={name:localStorage.getItem(S.NAME),about:localStorage.getItem(S.ABOUT),tools:JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),works:JSON.parse(localStorage.getItem(S.WORKS)||'[]')};
     let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
     a.href=url;a.download='sprint_backup.json';a.click();URL.revokeObjectURL(url);
 };
-
 window.importData=function(){
     let inp=document.createElement('input');inp.type='file';inp.accept='.json';
     inp.onchange=function(e){
@@ -186,7 +298,6 @@ window.importData=function(){
     };
     inp.click();
 };
-
 window.closeAdmin=function(){let m=document.getElementById('adminModal');if(m)m.remove();};
 window.refreshTools=function(){
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),c=document.getElementById('toolsAdminList');
@@ -196,14 +307,12 @@ window.refreshWorks=function(){
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]'),c=document.getElementById('worksAdminList');
     if(c)c.innerHTML=w.map((x,i)=>`<div class="list-item"><span><strong>${x.title}</strong> (${x.year||'2025'}) — ${x.desc.substring(0,40)}${x.desc.length>40?'...':''}</span><button class="del-btn" onclick="removeWork(${i})">✕</button></div>`).join('');
 };
-
 document.getElementById('adminGear').onclick=function(){
     let p=prompt('🔐 Пароль:');
     if(p===null)return;
     if(p!=='admin123'){alert('❌ Неверный!');return;}
     openAdmin();
 };
-
 init();load();
 </script>
 </body>
