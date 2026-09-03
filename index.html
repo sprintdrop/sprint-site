@@ -41,7 +41,6 @@
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
         }
         .project-btn:hover {
             background: #ffffff15;
@@ -110,6 +109,8 @@
             border: 1px solid #1f2a34;
         }
 
+        #projectList { display: block; }
+
         @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}}
     </style>
 </head>
@@ -126,7 +127,7 @@
         <button class="tab-btn" data-tab="contact">Контакты</button>
     </div>
 
-    <!-- ===== ВКЛАДКА: Обо мне ===== -->
+    <!-- ===== ОБО МНЕ ===== -->
     <div id="about" class="tab-content active">
         <div id="aboutText"></div>
         <div style="margin-top:15px;">
@@ -135,11 +136,9 @@
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКА: Работы ===== -->
+    <!-- ===== РАБОТЫ ===== -->
     <div id="works" class="tab-content">
-        <!-- Список проектов (кнопки) -->
         <div id="projectList"></div>
-        <!-- Страница отдельного проекта -->
         <div id="projectPage" class="project-page">
             <button class="back-btn" onclick="closeProject()">← Назад к проектам</button>
             <div class="project-full-title" id="projectFullTitle"></div>
@@ -148,7 +147,7 @@
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКА: Контакты ===== -->
+    <!-- ===== КОНТАКТЫ ===== -->
     <div id="contact" class="tab-content">
         <p style="margin-bottom:20px;">Связь:</p>
         <div class="contact-links">
@@ -162,7 +161,11 @@
 
 <script>
 const S={NAME:'sprint_name',ABOUT:'sprint_about',TOOLS:'sprint_tools',WORKS:'sprint_works'};
-const D={name:'Sprint OSINT',about:'Специализируюсь на OSINT и анализе сетей. Поиск скрытых данных, связей и уязвимостей.\n\nНавыки: пассивная/активная разведка, DNS-анализ, картирование ASN, WAF, антибот-системы, ЕГРЮЛ.',tools:['Nmap','Dig','WhoIs','RIPE','Curl','Shodan','Google Dorks','Maltego'],works:[{title:'Исследование e-commerce',desc:'Картирование подсетей, DNS, открытые порты.',year:'2025'},{title:'Анализ утечек',desc:'Обработка 10M+ записей, поиск связей.',year:'2024'},{title:'Юридический OSINT',desc:'Поиск аффилированных лиц через ЕГРЮЛ.',year:'2024'}]};
+const D={name:'Sprint OSINT',about:'Специализируюсь на OSINT и анализе сетей. Поиск скрытых данных, связей и уязвимостей.\n\nНавыки: пассивная/активная разведка, DNS-анализ, картирование ASN, WAF, антибот-системы, ЕГРЮЛ.',tools:['Nmap','Dig','WhoIs','RIPE','Curl','Shodan','Google Dorks','Maltego'],works:[
+    {title:'Расследование инфраструктуры Ozon.ru',desc:'Картирование подсетей, DNS-записи, открытые порты. Выявлены 12 уязвимых сервисов.',year:'2026'},
+    {title:'Отчет по OSINT-разведке ООО "Вайлдберриз"',desc:'Полный анализ юридической структуры, финансовых показателей, технической инфраструктуры и государственного надзора.',year:'2026'},
+    {title:'Кейс «AliExpress в России»',desc:'В рамках проекта проведен комплексный OSINT-анализ российского юридического лица глобального маркетплейса AliExpress. Исследование включало юридическую структуру, финансовую модель, историю управления, техническую инфраструктуру и анализ государственного надзора. Компания: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "АЛИЭКСПРЕСС РУС".',year:'2026'}
+]};
 
 function init(){
     if(!localStorage.getItem(S.NAME)) localStorage.setItem(S.NAME,D.name);
@@ -220,7 +223,6 @@ document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
     this.classList.add('active');
     document.getElementById(this.dataset.tab).classList.add('active');
-    // Если переключились на вкладку "Работы" — скрываем страницу проекта
     if(this.dataset.tab==='works'){
         closeProject();
     }
@@ -237,7 +239,7 @@ function openAdmin(){
         <label>Инструменты (через запятую)</label><div style="display:flex;gap:8px;flex-wrap:wrap;"><input type="text" id="editToolsInput" placeholder="Nmap, Shodan" style="flex:1;min-width:150px;"><button class="btn-primary" onclick="addTool()">➕</button></div>
         <div id="toolsAdminList" class="item-list">${t.map((x,i)=>`<div class="list-item"><span>${x}</span><button class="del-btn" onclick="removeTool(${i})">✕</button></div>`).join('')}</div>
         <hr>
-        <label>Новая работа</label><input type="text" id="editWorkTitle" placeholder="Название"><textarea id="editWorkDesc" placeholder="Описание" rows="2"></textarea><input type="text" id="editWorkYear" placeholder="Год"><button class="btn-primary" onclick="addWork()" style="margin-top:6px;">➕ Добавить</button>
+        <label>Новая работа</label><input type="text" id="editWorkTitle" placeholder="Название"><textarea id="editWorkDesc" placeholder="Описание" rows="3"></textarea><input type="text" id="editWorkYear" placeholder="Год"><button class="btn-primary" onclick="addWork()" style="margin-top:6px;">➕ Добавить</button>
         <div id="worksAdminList" class="item-list">${w.map((x,i)=>`<div class="list-item"><span><strong>${x.title}</strong> (${x.year||'2025'}) — ${x.desc.substring(0,40)}${x.desc.length>40?'...':''}</span><button class="del-btn" onclick="removeWork(${i})">✕</button></div>`).join('')}</div>
         <hr>
         <div class="btn-row"><button class="btn-primary" onclick="saveAll()">💾 Сохранить</button><button class="btn-secondary" onclick="exportData()">📤 Экспорт</button><button class="btn-secondary" onclick="importData()">📥 Импорт</button><button class="btn-close" onclick="closeAdmin()">✕</button></div>
