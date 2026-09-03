@@ -26,7 +26,7 @@
         .admin-gear{position:absolute;top:20px;right:25px;color:#3a4a58;font-size:1.2em;cursor:pointer;background:0 0;border:none;transition:.3s}
         .admin-gear:hover{color:#6ec8f0;transform:rotate(60deg)}
         
-        /* ===== АККОРДЕОН ДЛЯ ПРОЕКТОВ ===== */
+        /* ===== АККОРДЕОН ДЛЯ ПРОЕКТОВ (исправлен) ===== */
         .accordion-item {
             background: #ffffff08;
             margin: 12px 0;
@@ -74,20 +74,23 @@
             max-height: 0;
             padding: 0 20px;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.3s ease;
+            transition: max-height 0.5s ease, padding 0.3s ease;
             color: #b0c0ce;
             font-size: 0.95em;
-            line-height: 1.6;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .accordion-body.open {
-            max-height: 300px;
+            max-height: 800px; /* Увеличено для длинных текстов */
             padding: 0 20px 20px 20px;
         }
         .accordion-body p {
             margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        /* Адаптив */
         @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}}
     </style>
 </head>
@@ -104,7 +107,6 @@
         <button class="tab-btn" data-tab="contact">Контакты</button>
     </div>
     
-    <!-- ===== ВКЛАДКА: Обо мне ===== -->
     <div id="about" class="tab-content active">
         <div id="aboutText"></div>
         <div style="margin-top:15px;">
@@ -113,12 +115,10 @@
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКА: Работы (аккордеон) ===== -->
     <div id="works" class="tab-content">
         <div id="worksContainer"></div>
     </div>
 
-    <!-- ===== ВКЛАДКА: Контакты ===== -->
     <div id="contact" class="tab-content">
         <p style="margin-bottom:20px;">Связь:</p>
         <div class="contact-links">
@@ -149,7 +149,6 @@ function load(){
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
     document.getElementById('toolsContainer').innerHTML=t.length?t.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'<span style="color:#606870;">Нет инструментов</span>';
     
-    // ===== РАБОТЫ С АККОРДЕОНОМ =====
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     let container=document.getElementById('worksContainer');
     if(!w.length){
@@ -172,7 +171,6 @@ function load(){
     `).join('');
 }
 
-// ===== ФУНКЦИЯ РАЗВОРОТА =====
 function toggleWork(index){
     let body=document.getElementById('body-'+index);
     let arrow=document.getElementById('arrow-'+index);
@@ -186,7 +184,6 @@ function toggleWork(index){
     }
 }
 
-// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
 document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
@@ -194,7 +191,6 @@ document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.getElementById(this.dataset.tab).classList.add('active');
 });
 
-// ===== АДМИНКА =====
 function openAdmin(){
     let n=localStorage.getItem(S.NAME)||'',a=localStorage.getItem(S.ABOUT)||'',t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     let m=document.createElement('div');
@@ -212,7 +208,6 @@ function openAdmin(){
         <p style="color:#5a6a78;font-size:.8em;margin-top:8px;">⚠️ После сохранения обнови страницу (F5).</p></div>`;
     document.body.appendChild(m);
     
-    // Стили для админки (если их нет)
     if(!document.getElementById('adminStyles')){
         let style=document.createElement('style');
         style.id='adminStyles';
