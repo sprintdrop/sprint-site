@@ -25,8 +25,8 @@
         .footer{margin-top:30px;font-size:.7em;color:#606870;text-align:center;border-top:1px solid #ffffff10;padding-top:20px}
         .admin-gear{position:absolute;top:20px;right:25px;color:#3a4a58;font-size:1.2em;cursor:pointer;background:0 0;border:none;transition:.3s}
         .admin-gear:hover{color:#6ec8f0;transform:rotate(60deg)}
-        
-        /* ===== АККОРДЕОН ДЛЯ ПРОЕКТОВ (исправлен) ===== */
+
+        /* ===== АККОРДЕОН ===== */
         .accordion-item {
             background: #ffffff08;
             margin: 12px 0;
@@ -82,7 +82,7 @@
             word-wrap: break-word;
         }
         .accordion-body.open {
-            max-height: 800px; /* Увеличено для длинных текстов */
+            max-height: 2000px; /* 👈 ТЕПЕРЬ ТЕКСТ НЕ ОБРЕЗАЕТСЯ */
             padding: 0 20px 20px 20px;
         }
         .accordion-body p {
@@ -100,13 +100,13 @@
     <button class="admin-gear" id="adminGear">⚙</button>
     <h1 id="siteTitle">Sprint <strong>OSINT</strong></h1>
     <div class="subtitle">Разведка по открытым источникам · Анализ сетей</div>
-    
+
     <div class="tabs">
         <button class="tab-btn active" data-tab="about">Обо мне</button>
         <button class="tab-btn" data-tab="works">Работы</button>
         <button class="tab-btn" data-tab="contact">Контакты</button>
     </div>
-    
+
     <div id="about" class="tab-content active">
         <div id="aboutText"></div>
         <div style="margin-top:15px;">
@@ -148,7 +148,7 @@ function load(){
     document.getElementById('aboutText').innerHTML=a.replace(/\n/g,'<br>');
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
     document.getElementById('toolsContainer').innerHTML=t.length?t.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'<span style="color:#606870;">Нет инструментов</span>';
-    
+
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     let container=document.getElementById('worksContainer');
     if(!w.length){
@@ -207,7 +207,7 @@ function openAdmin(){
         <div class="btn-row"><button class="btn-primary" onclick="saveAll()">💾 Сохранить</button><button class="btn-secondary" onclick="exportData()">📤 Экспорт</button><button class="btn-secondary" onclick="importData()">📥 Импорт</button><button class="btn-close" onclick="closeAdmin()">✕</button></div>
         <p style="color:#5a6a78;font-size:.8em;margin-top:8px;">⚠️ После сохранения обнови страницу (F5).</p></div>`;
     document.body.appendChild(m);
-    
+
     if(!document.getElementById('adminStyles')){
         let style=document.createElement('style');
         style.id='adminStyles';
