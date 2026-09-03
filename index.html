@@ -26,69 +26,88 @@
         .admin-gear{position:absolute;top:20px;right:25px;color:#3a4a58;font-size:1.2em;cursor:pointer;background:0 0;border:none;transition:.3s}
         .admin-gear:hover{color:#6ec8f0;transform:rotate(60deg)}
 
-        /* ===== АККОРДЕОН ===== */
-        .accordion-item {
+        /* ===== КНОПКИ ПРОЕКТОВ ===== */
+        .project-btn {
+            display: block;
+            width: 100%;
+            padding: 18px 25px;
+            margin: 10px 0;
             background: #ffffff08;
-            margin: 12px 0;
-            border-radius: 6px;
-            border-left: 3px solid #6ec8f0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .accordion-header {
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
-            transition: background 0.2s;
-        }
-        .accordion-header:hover {
-            background: #ffffff12;
-        }
-        .accordion-header h3 {
+            border: 1px solid #2a3a48;
+            border-radius: 10px;
             color: #fff;
             font-size: 1.05em;
-            font-weight: 600;
-            margin: 0;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
         }
-        .accordion-header .year {
+        .project-btn:hover {
+            background: #ffffff15;
+            border-color: #6ec8f0;
+            transform: translateX(5px);
+        }
+        .project-btn .year {
             color: #6ec8f0;
             opacity: 0.7;
             font-size: 0.85em;
-            margin-left: 15px;
-            white-space: nowrap;
+            float: right;
         }
-        .accordion-header .arrow {
+        .project-btn .arrow-icon {
             color: #6ec8f0;
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-            margin-left: 15px;
-            flex-shrink: 0;
+            margin-left: 10px;
+            opacity: 0.5;
         }
-        .accordion-header .arrow.open {
-            transform: rotate(180deg);
+        .project-btn:hover .arrow-icon {
+            opacity: 1;
         }
-        .accordion-body {
-            max-height: 0;
-            padding: 0 20px;
-            overflow: hidden;
-            transition: max-height 0.5s ease, padding 0.3s ease;
-            color: #b0c0ce;
+
+        /* ===== СТРАНИЦА ПРОЕКТА ===== */
+        .project-page {
+            display: none;
+        }
+        .project-page.active {
+            display: block;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            margin-bottom: 20px;
+            background: transparent;
+            border: 1px solid #2a3a48;
+            border-radius: 8px;
+            color: #a0a8b0;
+            cursor: pointer;
+            font-family: inherit;
             font-size: 0.95em;
-            line-height: 1.7;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            background: #ffffff10;
+            color: #fff;
+        }
+        .project-full-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .project-full-year {
+            color: #6ec8f0;
+            opacity: 0.7;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        .project-full-desc {
+            color: #d0d8e0;
+            font-size: 1em;
+            line-height: 1.8;
             white-space: pre-wrap;
             word-wrap: break-word;
-        }
-        .accordion-body.open {
-            max-height: 2000px; /* 👈 ТЕПЕРЬ ТЕКСТ НЕ ОБРЕЗАЕТСЯ */
-            padding: 0 20px 20px 20px;
-        }
-        .accordion-body p {
-            margin: 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            background: #0a0e12;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #1f2a34;
         }
 
         @media(max-width:600px){#wrapper{padding:20px}h1{font-size:2.2em}.tabs{flex-wrap:wrap}}
@@ -107,6 +126,7 @@
         <button class="tab-btn" data-tab="contact">Контакты</button>
     </div>
 
+    <!-- ===== ВКЛАДКА: Обо мне ===== -->
     <div id="about" class="tab-content active">
         <div id="aboutText"></div>
         <div style="margin-top:15px;">
@@ -115,10 +135,20 @@
         </div>
     </div>
 
+    <!-- ===== ВКЛАДКА: Работы ===== -->
     <div id="works" class="tab-content">
-        <div id="worksContainer"></div>
+        <!-- Список проектов (кнопки) -->
+        <div id="projectList"></div>
+        <!-- Страница отдельного проекта -->
+        <div id="projectPage" class="project-page">
+            <button class="back-btn" onclick="closeProject()">← Назад к проектам</button>
+            <div class="project-full-title" id="projectFullTitle"></div>
+            <div class="project-full-year" id="projectFullYear"></div>
+            <div class="project-full-desc" id="projectFullDesc"></div>
+        </div>
     </div>
 
+    <!-- ===== ВКЛАДКА: Контакты ===== -->
     <div id="contact" class="tab-content">
         <p style="margin-bottom:20px;">Связь:</p>
         <div class="contact-links">
@@ -149,48 +179,54 @@ function load(){
     let t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]');
     document.getElementById('toolsContainer').innerHTML=t.length?t.map(x=>`<span class="tool-tag">${x}</span>`).join(''):'<span style="color:#606870;">Нет инструментов</span>';
 
+    // ===== ПРОЕКТЫ =====
     let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
-    let container=document.getElementById('worksContainer');
+    let list=document.getElementById('projectList');
     if(!w.length){
-        container.innerHTML='<p style="color:#606870;">Нет проектов</p>';
+        list.innerHTML='<p style="color:#606870;">Нет проектов</p>';
         return;
     }
-    container.innerHTML=w.map((x,i)=>`
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleWork(${i})">
-                <div style="display:flex;align-items:center;flex-wrap:wrap;">
-                    <h3>${x.title}</h3>
-                    <span class="year">${x.year||'2025'}</span>
-                </div>
-                <span class="arrow" id="arrow-${i}">▾</span>
-            </div>
-            <div class="accordion-body" id="body-${i}">
-                <p>${x.desc}</p>
-            </div>
-        </div>
+    list.innerHTML=w.map((x,i)=>`
+        <button class="project-btn" onclick="openProject(${i})">
+            <span>${x.title}</span>
+            <span class="year">${x.year||'2025'} →</span>
+        </button>
     `).join('');
 }
 
-function toggleWork(index){
-    let body=document.getElementById('body-'+index);
-    let arrow=document.getElementById('arrow-'+index);
-    if(!body) return;
-    if(body.classList.contains('open')){
-        body.classList.remove('open');
-        if(arrow) arrow.classList.remove('open');
-    }else{
-        body.classList.add('open');
-        if(arrow) arrow.classList.add('open');
-    }
+// ===== ОТКРЫТЬ ПРОЕКТ =====
+function openProject(index){
+    let w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
+    let project=w[index];
+    if(!project) return;
+
+    document.getElementById('projectFullTitle').textContent=project.title;
+    document.getElementById('projectFullYear').textContent=project.year||'2025';
+    document.getElementById('projectFullDesc').textContent=project.desc;
+
+    document.getElementById('projectList').style.display='none';
+    document.getElementById('projectPage').classList.add('active');
 }
 
+// ===== ЗАКРЫТЬ ПРОЕКТ =====
+function closeProject(){
+    document.getElementById('projectList').style.display='block';
+    document.getElementById('projectPage').classList.remove('active');
+}
+
+// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
 document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
     this.classList.add('active');
     document.getElementById(this.dataset.tab).classList.add('active');
+    // Если переключились на вкладку "Работы" — скрываем страницу проекта
+    if(this.dataset.tab==='works'){
+        closeProject();
+    }
 });
 
+// ===== АДМИНКА =====
 function openAdmin(){
     let n=localStorage.getItem(S.NAME)||'',a=localStorage.getItem(S.ABOUT)||'',t=JSON.parse(localStorage.getItem(S.TOOLS)||'[]'),w=JSON.parse(localStorage.getItem(S.WORKS)||'[]');
     let m=document.createElement('div');
